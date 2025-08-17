@@ -54,13 +54,7 @@ class AuthHandler:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token"
             )
-    
-    async def get_user_by_email(self, email: str):
-        user = await self.db.users.find_one({"email": email})
-        if user:
-            return User(**user)
-        return None
-    
+            
     async def get_user_by_id(self, user_id: str):
         user = await self.db.users.find_one({"id": user_id})
         if user:
