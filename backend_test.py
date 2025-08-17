@@ -6,10 +6,15 @@ from datetime import datetime
 class GOLearningPlatformTester:
     def __init__(self, base_url="https://go-technolab.preview.emergentagent.com"):
         self.base_url = base_url
-        self.token = None
+        self.user_token = None
+        self.admin_token = None
         self.tests_run = 0
         self.tests_passed = 0
         self.current_user = None
+        self.access_codes = {
+            "user": "GO2025_UserAccess_7X9K",
+            "admin": "ADMIN_Control_P4N3L_2025"
+        }
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
         """Run a single API test"""
