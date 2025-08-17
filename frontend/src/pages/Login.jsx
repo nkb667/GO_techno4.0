@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { BookOpen, Key, Copy, CheckCircle } from 'lucide-react';
 
-const LoginNew = () => {
+const Login = () => {
   const [accessCode, setAccessCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
