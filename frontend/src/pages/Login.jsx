@@ -194,4 +194,4 @@ const Login = () => {
   );
 };
 
-export default LoginNew;
+export default Login;
