@@ -120,7 +120,7 @@ async def login_with_code(credentials: dict, database = Depends(get_db)):
     # Create virtual user for response
     virtual_user = User(
         id=user_id,
-        email=f"{user_id}@example.com",
+        email=f"{user_id}@golearn.com",
         full_name=code_info["name"],
         role=UserRole(code_info["role"]),
         is_active=True,
