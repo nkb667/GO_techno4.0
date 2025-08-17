@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class GOLearningPlatformTester:
-    def __init__(self, base_url="https://go-technolab.preview.emergentagent.com"):
+    def __init__(self, base_url="http://localhost:8001"):
         self.base_url = base_url
         self.user_token = None
         self.admin_token = None
