@@ -83,21 +83,46 @@ class GOLearningPlatformTester:
         )
         return success
 
-    def test_login(self, email, password):
-        """Test login and get token"""
+    def test_login_with_code(self, access_code, role_type="user"):
+        """Test login with access code"""
         success, response = self.run_test(
-            f"Login ({email})",
+            f"Login with {role_type} code",
             "POST",
             "auth/login",
             200,
-            data={"email": email, "password": password}
+            data={"code": access_code}
         )
         if success and 'access_token' in response:
-            self.token = response['access_token']
+            if role_type == "user":
+                self.user_token = response['access_token']
+            else:
+                self.admin_token = response['access_token']
             self.current_user = response.get('user', {})
             print(f"   Logged in as: {self.current_user.get('full_name', 'Unknown')} ({self.current_user.get('role', 'Unknown')})")
             return True
         return False
+
+    def test_invalid_code_login(self):
+        """Test login with invalid code"""
+        success, response = self.run_test(
+            "Login with invalid code",
+            "POST",
+            "auth/login",
+            401,  # Should return 401 for invalid code
+            data={"code": "INVALID_CODE_123"}
+        )
+        return success
+
+    def test_missing_code_login(self):
+        """Test login without code"""
+        success, response = self.run_test(
+            "Login without code",
+            "POST",
+            "auth/login",
+            400,  # Should return 400 for missing code
+            data={}
+        )
+        return success
 
     def test_get_current_user(self):
         """Test getting current user info"""
