@@ -181,7 +181,7 @@ async def get_user_by_id(
     else:
         return User(
             id=user_id,
-            email=f"{user_id}@example.com",
+            email=f"{user_id}@golearn.com",
             full_name="Demo User",
             role=UserRole.STUDENT,
             is_active=True,
