@@ -73,7 +73,7 @@ async def get_current_user_with_db(
     # Create virtual user object
     virtual_user = User(
         id=user_id,
-        email=f"{user_id}@example.com",
+        email=f"{user_id}@golearn.com",
         full_name=name,
         role=UserRole(role),
         is_active=True,
