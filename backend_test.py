@@ -236,8 +236,8 @@ class GOLearningPlatformTester:
 
     def test_unauthorized_access(self):
         """Test accessing protected endpoint without token"""
-        old_token = self.token
-        self.token = None
+        old_token = self.user_token
+        self.user_token = None
         
         success, response = self.run_test(
             "Unauthorized Access Test",
@@ -246,7 +246,35 @@ class GOLearningPlatformTester:
             401  # Should fail with 401
         )
         
-        self.token = old_token
+        self.user_token = old_token
+        return success
+
+    def test_admin_only_access_with_user_token(self):
+        """Test admin endpoint with user token (should fail)"""
+        old_token = self.user_token
+        
+        success, response = self.run_test(
+            "Admin Endpoint with User Token",
+            "GET",
+            "users",
+            403  # Should fail with 403
+        )
+        
+        return success
+
+    def test_admin_access_with_admin_token(self):
+        """Test admin endpoint with admin token (should succeed)"""
+        old_token = self.user_token
+        self.user_token = self.admin_token
+        
+        success, response = self.run_test(
+            "Admin Endpoint with Admin Token",
+            "GET",
+            "users",
+            200  # Should succeed
+        )
+        
+        self.user_token = old_token
         return success
 
 def main():
