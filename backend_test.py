@@ -21,8 +21,8 @@ class GOLearningPlatformTester:
         url = f"{self.base_url}/api/{endpoint}"
         test_headers = {'Content-Type': 'application/json'}
         
-        if self.token:
-            test_headers['Authorization'] = f'Bearer {self.token}'
+        if self.user_token:
+            test_headers['Authorization'] = f'Bearer {self.user_token}'
         
         if headers:
             test_headers.update(headers)
