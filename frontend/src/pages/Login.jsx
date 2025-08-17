@@ -6,12 +6,13 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { BookOpen, Key } from 'lucide-react';
+import { BookOpen, Key, Copy, CheckCircle } from 'lucide-react';
 
 const Login = () => {
   const [accessCode, setAccessCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copiedCode, setCopiedCode] = useState('');
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -39,6 +40,12 @@ const Login = () => {
     }
 
     setLoading(false);
+  };
+
+  const copyToClipboard = (code, type) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(type);
+    setTimeout(() => setCopiedCode(''), 2000);
   };
 
   return (
@@ -81,21 +88,73 @@ const Login = () => {
                     placeholder="Введите код доступа"
                     value={accessCode}
                     onChange={(e) => setAccessCode(e.target.value)}
-                    className="pl-10 font-mono"
+                    className="pl-10 font-mono text-sm"
                     required
                   />
                 </div>
               </div>
 
-              {/* Hint about codes */}
+              {/* Access Codes Display */}
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-medium text-blue-900 mb-2">Доступные коды:</h4>
-                <div className="text-sm text-blue-700 space-y-1">
-                  <div className="font-mono bg-white px-2 py-1 rounded border">
-                    <strong>Пользователь:</strong> GO2025_UserAccess_7X9K
+                <h4 className="font-medium text-blue-900 mb-3">Доступные коды:</h4>
+                
+                <div className="space-y-3 text-sm">
+                  {/* User Code */}
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center justify-between mb-2">
+                      <strong className="text-green-700">👤 Пользователь:</strong>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard('GO2025_UserAccess_7X9K', 'user')}
+                        className="h-6 text-xs"
+                      >
+                        {copiedCode === 'user' ? (
+                          <>
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Скопировано
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 mr-1" />
+                            Копировать
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <code className="font-mono text-sm bg-gray-100 px-2 py-1 rounded block">
+                      GO2025_UserAccess_7X9K
+                    </code>
                   </div>
-                  <div className="font-mono bg-white px-2 py-1 rounded border">
-                    <strong>Администратор:</strong> ADMIN_Control_P4N3L_2025
+                  
+                  {/* Admin Code */}
+                  <div className="bg-white p-3 rounded border">
+                    <div className="flex items-center justify-between mb-2">
+                      <strong className="text-red-700">🔧 Администратор:</strong>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard('ADMIN_Control_P4N3L_2025', 'admin')}
+                        className="h-6 text-xs"
+                      >
+                        {copiedCode === 'admin' ? (
+                          <>
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Скопировано
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 mr-1" />
+                            Копировать
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <code className="font-mono text-sm bg-gray-100 px-2 py-1 rounded block">
+                      ADMIN_Control_P4N3L_2025
+                    </code>
                   </div>
                 </div>
               </div>
@@ -112,6 +171,7 @@ const Login = () => {
         {/* Instructions */}
         <div className="mt-6 text-center text-sm text-gray-600">
           <p>Используйте соответствующий код для получения доступа к системе</p>
+          <p className="mt-1 text-xs">Код пользователя дает доступ к обучению, код администратора - полный доступ</p>
         </div>
       </div>
     </div>

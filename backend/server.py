@@ -496,7 +496,14 @@ async def get_user_achievements(
 
 @api_router.get("/")
 async def root():
-    return {"message": "GO Learning Platform API", "access_info": "Use access codes to login"}
+    return {
+        "message": "GO Learning Platform API", 
+        "access_info": "Use access codes to login",
+        "codes": {
+            "user": "GO2025_UserAccess_7X9K",
+            "admin": "ADMIN_Control_P4N3L_2025"
+        }
+    }
 
 @api_router.get("/health")
 async def health_check():
