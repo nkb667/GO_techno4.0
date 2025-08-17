@@ -279,6 +279,7 @@ class GOLearningPlatformTester:
 
 def main():
     print("🚀 Starting GO Learning Platform API Tests")
+    print("Testing Code-Based Authentication System")
     print("=" * 50)
     
     tester = GOLearningPlatformTester()
@@ -301,80 +302,70 @@ def main():
     
     tester.test_unauthorized_access()
 
-    # Test authentication with different user roles
-    print("\n🔐 AUTHENTICATION TESTS")
+    # Test authentication with access codes
+    print("\n🔐 CODE-BASED AUTHENTICATION TESTS")
     print("-" * 30)
     
-    test_users = [
-        ("student@golearn.com", "student123", "Student"),
-        ("teacher@golearn.com", "teacher123", "Teacher"),
-        ("admin@golearn.com", "admin123", "Admin")
-    ]
+    # Test invalid and missing codes first
+    tester.test_invalid_code_login()
+    tester.test_missing_code_login()
     
-    successful_logins = []
+    # Test valid codes
+    user_login_success = tester.test_login_with_code(tester.access_codes["user"], "user")
+    admin_login_success = tester.test_login_with_code(tester.access_codes["admin"], "admin")
     
-    for email, password, role in test_users:
-        if tester.test_login(email, password):
-            successful_logins.append((email, password, role))
-            
-            # Test getting current user info
-            tester.test_get_current_user()
-            
-            # Reset token for next user
-            tester.token = None
-    
-    if not successful_logins:
+    if not user_login_success and not admin_login_success:
         print("❌ No successful logins - cannot continue with protected endpoint tests")
         return 1
 
-    # Continue with student user for main functionality tests
-    print("\n📚 STUDENT FUNCTIONALITY TESTS")
+    # Test role-based access control
+    print("\n🛡️  ROLE-BASED ACCESS CONTROL TESTS")
     print("-" * 30)
     
-    student_email, student_password, _ = successful_logins[0]  # Use first successful login (should be student)
-    tester.test_login(student_email, student_password)
-    
-    # Test lessons functionality
-    lessons = tester.test_get_lessons()
-    
-    if lessons:
-        # Test getting lessons by difficulty
-        for difficulty in ["beginner", "intermediate", "advanced"]:
-            tester.test_get_lessons_by_difficulty(difficulty)
+    if user_login_success:
+        # Test getting current user info with user token
+        tester.test_get_current_user()
         
-        # Test getting a specific lesson
-        first_lesson = lessons[0]
-        lesson_id = first_lesson.get('id')
-        if lesson_id:
-            success, lesson_data = tester.test_get_lesson_by_id(lesson_id)
-            
-            if success:
-                # Test lesson progress
-                tester.test_start_lesson(lesson_id)
-                tester.test_complete_lesson(lesson_id)
-                
-                # Test getting quizzes for the lesson
-                tester.test_get_lesson_quizzes(lesson_id)
+        # Test admin endpoint with user token (should fail)
+        tester.test_admin_only_access_with_user_token()
     
-    # Test classes functionality
-    tester.test_get_classes()
-    
-    # Test achievements
-    if tester.current_user and tester.current_user.get('id'):
-        tester.test_get_user_achievements(tester.current_user['id'])
+    if admin_login_success:
+        # Test admin endpoint with admin token (should succeed)
+        tester.test_admin_access_with_admin_token()
 
-    # Test with teacher user if available
-    teacher_login = next((login for login in successful_logins if login[2] == "Teacher"), None)
-    if teacher_login:
-        print("\n👨‍🏫 TEACHER FUNCTIONALITY TESTS")
+    # Continue with user functionality tests
+    if user_login_success:
+        print("\n📚 USER FUNCTIONALITY TESTS")
         print("-" * 30)
         
-        teacher_email, teacher_password, _ = teacher_login
-        tester.test_login(teacher_email, teacher_password)
+        # Test lessons functionality
+        lessons = tester.test_get_lessons()
         
-        # Test teacher-specific functionality
+        if lessons:
+            # Test getting lessons by difficulty
+            for difficulty in ["beginner", "intermediate", "advanced"]:
+                tester.test_get_lessons_by_difficulty(difficulty)
+            
+            # Test getting a specific lesson
+            first_lesson = lessons[0]
+            lesson_id = first_lesson.get('id')
+            if lesson_id:
+                success, lesson_data = tester.test_get_lesson_by_id(lesson_id)
+                
+                if success:
+                    # Test lesson progress
+                    tester.test_start_lesson(lesson_id)
+                    tester.test_complete_lesson(lesson_id)
+                    
+                    # Test getting quizzes for the lesson
+                    tester.test_get_lesson_quizzes(lesson_id)
+        
+        # Test classes functionality
         tester.test_get_classes()
-        tester.test_get_lessons()
+        
+        # Test achievements
+        if tester.current_user and tester.current_user.get('id'):
+            tester.test_get_user_achievements(tester.current_user['id'])
 
     # Print final results
     print("\n" + "=" * 50)
