@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Layout/Navbar";
 
 // Pages
-import Login from "./pages/LoginNew";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Lessons from "./pages/Lessons";
 import LessonView from "./pages/LessonView";
