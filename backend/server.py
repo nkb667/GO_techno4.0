@@ -153,7 +153,7 @@ async def get_users(
     for i in range(5):
         virtual_users.append(User(
             id=f"demo_user_{i}",
-            email=f"user{i}@example.com",
+            email=f"user{i}@golearn.com",
             full_name=f"Demo User {i}",
             role=UserRole.STUDENT,
             is_active=True,
